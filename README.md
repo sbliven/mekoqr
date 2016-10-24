@@ -1,6 +1,6 @@
 # MekaQR
 
-Read and write Mekorama level QR codes.
+Read and write [Mekorama](http://www.mekorama.com/) level QR codes.
 
 Ultimately, the goal of this project is to provide methods for the reading, manipulating, and generating Mekorama levels. The level format is currently not understood, so current code focuses on analyzing and reverse engineering this format.
 

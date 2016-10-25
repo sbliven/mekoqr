@@ -1,4 +1,4 @@
-# MekaQR
+# MekoQR
 
 Read and write [Mekorama](http://www.mekorama.com/) level QR codes.
 

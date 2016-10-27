@@ -133,11 +133,11 @@ public class MekoReader {
 		// List of images to decode
 		String[] filenames = new String[] {
 //				"/Users/blivens/dev/mekorama/levels/blocks/00_blank.png",
-				"/Users/blivens/dev/mekorama/levels/blocks/01_block_stone.png",
+//				"/Users/blivens/dev/mekorama/levels/blocks/01_block_stone.png",
 //				"/Users/blivens/dev/mekorama/levels/blocks/02_block_brick.png",
 //				"/Users/blivens/dev/mekorama/levels/blocks/03_block_grass.png",
 //				"/Users/blivens/dev/mekorama/levels/blocks/04_blank_stone.png",
-				"/Users/blivens/dev/mekorama/levels/blocks/axes.png",
+//				"/Users/blivens/dev/mekorama/levels/blocks/axes.png",
 				"/Users/blivens/dev/mekorama/levels/blocks/all_blocks.png",
 //				"/Users/blivens/dev/mekorama/levels/blocks/water1.png",
 //				"/Users/blivens/dev/mekorama/levels/blocks/water2.png",

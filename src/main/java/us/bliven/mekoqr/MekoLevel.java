@@ -86,7 +86,7 @@ public class MekoLevel {
 		
 		if(logger.isInfoEnabled()) {
 			String hex = MekoReader.bytesToHex(uncompressed);
-			logger.info("Decompressed {} bytes starting with {}",len, hex.substring(0, Math.min(len, 30)));
+			logger.info("Decompressed {} bytes starting with {}{}",len, hex.substring(0, Math.min(len, 30)),len>30?"...":"");
 		}
 
 		// Parse data
@@ -136,7 +136,11 @@ public class MekoLevel {
 			if( blk.hasSubtypes() ) {
 				i++;
 				val = data[i];
-				blk = blk.getSubtype(val);
+				try {
+					blk = blk.getSubtype(val);
+				} catch(IllegalArgumentException e) {
+					logger.error(e.getMessage());
+				}
 			}
 			level[pos] = blk;
 			pos++;

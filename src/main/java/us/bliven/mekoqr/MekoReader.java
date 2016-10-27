@@ -2,12 +2,12 @@ package us.bliven.mekoqr;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.DataFormatException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +43,11 @@ public class MekoReader {
 		hints.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
 	}
 	
+	
+	public MekoLevel readQR(File file) throws NotFoundException, ChecksumException, FormatException, IOException, DataFormatException {
+		byte[] raw = readQRraw(file);
+		return new MekoLevel(raw);
+	}
 	/**
 	 * Read binary data from a QR code.
 	 * @param file Image containing the QR code
@@ -52,7 +57,7 @@ public class MekoReader {
 	 * @throws FormatException Illegal QR code or miss-detected code
 	 * @throws IOException Error reading image file
 	 */
-	public byte[] readQR(File file) throws NotFoundException, ChecksumException, FormatException, IOException {
+	private byte[] readQRraw(File file) throws NotFoundException, ChecksumException, FormatException, IOException {
 		BufferedImage image = ImageReader.readImage(file.toURI());
 
 		// creating binary bitmap from source image
@@ -112,8 +117,11 @@ public class MekoReader {
 	
 	final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
 	public static String bytesToHex(byte[] bytes) {
-	    char[] hexChars = new char[bytes.length * 3];
-	    for ( int j = 0; j < bytes.length; j++ ) {
+		return bytesToHex(bytes,bytes.length);
+	}
+	public static String bytesToHex(byte[] bytes,int len) {
+	    char[] hexChars = new char[len * 3];
+	    for ( int j = 0; j < len; j++ ) {
 	        int v = bytes[j] & 0xFF;
 	        hexChars[j * 3] = hexArray[v >>> 4];
 	        hexChars[j * 3 + 1] = hexArray[v & 0x0F];
@@ -125,10 +133,18 @@ public class MekoReader {
 		// List of images to decode
 		String[] filenames = new String[] {
 //				"/Users/blivens/dev/mekorama/levels/blocks/00_blank.png",
-//				"/Users/blivens/dev/mekorama/levels/blocks/01_block_stone.png",
+				"/Users/blivens/dev/mekorama/levels/blocks/01_block_stone.png",
 //				"/Users/blivens/dev/mekorama/levels/blocks/02_block_brick.png",
 //				"/Users/blivens/dev/mekorama/levels/blocks/03_block_grass.png",
 //				"/Users/blivens/dev/mekorama/levels/blocks/04_blank_stone.png",
+				"/Users/blivens/dev/mekorama/levels/blocks/axes.png",
+				"/Users/blivens/dev/mekorama/levels/blocks/all_blocks.png",
+//				"/Users/blivens/dev/mekorama/levels/blocks/water1.png",
+//				"/Users/blivens/dev/mekorama/levels/blocks/water2.png",
+//				"/Users/blivens/dev/mekorama/levels/blocks/water3.png",
+//				"/Users/blivens/dev/mekorama/levels/blocks/water4.png",
+//				"/Users/blivens/dev/mekorama/levels/blocks/water5.png",
+				"/Users/blivens/dev/mekorama/levels/blocks/pillars.png",
 //				"/Users/blivens/dev/mekorama/levels/title/a_Unknown.png",
 //				"/Users/blivens/dev/mekorama/levels/title/a_a.png",
 //				"/Users/blivens/dev/mekorama/levels/title/a_b.png",
@@ -153,8 +169,8 @@ public class MekoReader {
 //				"/Users/blivens/dev/mekorama/levels/pos/stone_100.png",
 //				"/Users/blivens/dev/mekorama/levels/pos/stone_010.png",
 //				"/Users/blivens/dev/mekorama/levels/pos/stone_001.png",
-				"/Users/blivens/dev/mekorama/levels/gen/00_blank_regen.png",
-				"/Users/blivens/dev/mekorama/levels/gen/sequence.png",
+//				"/Users/blivens/dev/mekorama/levels/gen/00_blank_regen.png",
+//				"/Users/blivens/dev/mekorama/levels/gen/sequence.png",
 		};
 		
 		MekoReader qr = new MekoReader();
@@ -167,21 +183,21 @@ public class MekoReader {
 					continue;
 				}
 				// Decode QR code
-				byte[] bytes = qr.readQR(f);
+				MekoLevel level = qr.readQR(f);
 				
-				// Print data as hex
+				// Print level info
 				System.out.println(filename);
-				System.out.println(bytesToHex(bytes));
+				System.out.println(level.summarize());
 				//System.out.format("Length: %d\t%d\t%d%n",bytes.length,bytes[0],bytes.length-bytes[0]);
 				
-				// Save data to a file
-				File outFile = new File(f.getParentFile(),f.getName()+".lvl");
-				try( FileOutputStream out = new FileOutputStream(outFile) ) {
-					//out.write(new byte[]{0x1f,(byte) 0x8b}); //gzip magic
-					out.write(bytes);
-				}
+//				// Save data to a file
+//				File outFile = new File(f.getParentFile(),f.getName()+".lvl");
+//				try( FileOutputStream out = new FileOutputStream(outFile) ) {
+//					//out.write(new byte[]{0x1f,(byte) 0x8b}); //gzip magic
+//					out.write(level.getRawData());
+//				}
 			} catch ( ChecksumException | FormatException
-					| IOException e) {
+					| IOException |DataFormatException e) {
 				logger.error("Error reading {}",filename,e);
 				System.err.format("Error reading %s%n",filename);
 			} catch (NotFoundException e) {

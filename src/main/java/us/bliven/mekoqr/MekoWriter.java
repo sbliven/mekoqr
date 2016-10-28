@@ -24,14 +24,17 @@
  
 package us.bliven.mekoqr;
 
+import static us.bliven.mekoqr.MekoLevel.SIZE;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.zip.Deflater;
 
 import javax.imageio.ImageIO;
 
@@ -80,12 +83,12 @@ public class MekoWriter {
 	 * @throws WriterException for errors generating the code
 	 * @throws IOException for errors writing the file
 	 */
-	public void write(File outfile, byte[] data) throws WriterException, IOException {
+	public void write(File outfile, byte[] data, int len) throws WriterException, IOException {
 		Map<EncodeHintType, Object> hints = new HashMap<>();
 		hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
 		
 		// ISO-8859-1 is defined for all bytes, unlike UTF-8 or ASCII, so it won't mangle the data
-		String contents = new String(data, Charset.forName("ISO-8859-1"));
+		String contents = new String(data, 0, len, Charset.forName("ISO-8859-1"));
 		
 		int width = 600;
 		int height = 600;
@@ -111,17 +114,68 @@ public class MekoWriter {
 
 	}
 	
-	public static void main(String[] args) throws WriterException, IOException {
-		MekoWriter writer = new MekoWriter();
-		String dataHex;
-		File outfile;
-//		dataHex = "01 13 0D FC 78 01 ED C0 C1 09 00 10 00 00 40 1F F6 32 0A 2F 45 94 D8 DF 1E BA 8B 75 94 D9 53 BE A7 AD 1D 00 00 00 80 EF 3D 91 13 04 87 ";
-//		outfile = new File("/Users/blivens/dev/mekorama/levels/gen/00_blank_regen.png"); 
-		dataHex = "01 13 0D FC 78 01 ED CA BB 09 00 21 10 40 C1 BB F0 92 AB C1 56 CC C5 CC 12 16 04 65 05 F1 D3 BE 35 18 8A 6F E2 F9 BC 4C E3 64 48 FE 83 26 2D 53 8D ED 2D 96 FA 00 00 80 7B BD 5B 1B 00 00 9C 6C 01 4B 79 08 DE";
-		outfile = new File("/Users/blivens/dev/mekorama/levels/gen/stone_010_incremented3.png"); 
+	public static int encodeLevel(MekoLevel level, byte[] uncompressed) {
+		
+		int len = 0;
+		len = copyString(level.getTitle(), uncompressed, len);
+		len = copyString(level.getAuthor(), uncompressed, len);
+		for(int z = 0; z< SIZE; z++) {
+			for(int y = 0; y< SIZE; y++) {
+				for(int x = 0; x< SIZE; x++) {
+					BlockType blk = level.getBlock(x, y, z);
+					byte[] vals = blk.getValues();
+					for(int i=0;i<vals.length;i++) {
+						uncompressed[len] = vals[i];
+						len++;
+					}
+				}
+			}
+		}
 
-		byte[] data = hexToBytes(dataHex);
-		// Create QR code
-		writer.write(outfile,data);
+		return len;
 	}
+	private static int copyString(String str, byte[] bytes, int pos) {
+		assert str.length() < 256;
+
+		bytes[pos] = (byte) str.length();
+		pos++;
+		byte[] titleChars = str.getBytes(StandardCharsets.US_ASCII);
+		for(int i=0;i<titleChars.length;i++) {
+			bytes[pos] = titleChars[i];
+			pos++;
+		}
+		return pos;
+	}
+	
+	public void write(File file, MekoLevel level ) throws WriterException, IOException {
+		byte[] encoded = new byte[17*2+SIZE*SIZE*SIZE*2];
+		int len = encodeLevel(level, encoded);
+		
+		byte[] compressed = new byte[len+4];
+		len = deflateWrapped(encoded, compressed);
+		for(int i=len-1;i>=0;i--) {
+			compressed[i+4] = compressed[i];
+		}
+		compressed[0] = 0x01;
+		compressed[1] = 0x13;
+		compressed[2] = 0x0D;
+		compressed[3] = (byte)0xFC;
+		
+		write(file,compressed,len+4);
+	}
+	
+	/**
+	 * Compress into a zlib-wrapped DEFLATE data stream
+	 * @param compressed
+	 * @param uncompressed
+	 * @return
+	 */
+	static int deflateWrapped( byte[] uncompressed, byte[] compressed) {
+		Deflater compressor = new Deflater(1, false);
+		compressor.setInput(uncompressed);
+		compressor.finish();
+		int compressedlen = compressor.deflate(compressed);
+		return compressedlen;
+	}
+
 }

@@ -1,13 +1,19 @@
 package us.bliven.mekoqr;
 
+import static us.bliven.mekoqr.MekoLevel.SIZE;
+
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.DataFormatException;
+import java.util.zip.Inflater;
+import java.util.zip.InflaterInputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +52,7 @@ public class MekoReader {
 	
 	public MekoLevel readQR(File file) throws NotFoundException, ChecksumException, FormatException, IOException, DataFormatException {
 		byte[] raw = readQRraw(file);
-		return new MekoLevel(raw);
+		return createLevel(raw);
 	}
 	/**
 	 * Read binary data from a QR code.
@@ -100,20 +106,113 @@ public class MekoReader {
 		}
 	}
 	
+	private static MekoLevel createLevel(byte[] raw) throws DataFormatException {
+		byte[] b = Arrays.copyOfRange(raw, 4, raw.length);
 
-//	private static byte[] trimFiller(byte[] in) {
-//		// trim 0xEC and 0x11 bytes from the end
-//		// This is the wrong approach; instead trimming should read the byte length
-//		// from nibbles 1 & 2 of the stream
-//		int i;
-//		for(i=in.length-1;i>=0;i--) {
-//			if( in[i] != 0x11 && in[i] != (byte)0xEC ) {
-//				break;
-//			}
-//		}
-//		return Arrays.copyOf(in, i+1);
-//	}
+		// Level consists of two strings (1 + 16 bytes) and the blocks, which can be 1 or 2 bytes
+		byte[] uncompressed = new byte[17*2+SIZE*SIZE*SIZE*2];
+		int len = MekoReader.inflate(b,b.length,uncompressed);
+		
+		if(logger.isInfoEnabled()) {
+			String hex = MekoReader.bytesToHex(uncompressed);
+			logger.info("Decompressed {} bytes starting with {}{}",len, hex.substring(0, Math.min(len, 30)),len>30?"...":"");
+		}
 
+		// Parse data
+		
+		int pos = 0;
+		
+		// Title
+		int titleLen = uncompressed[pos];
+		pos += 1;
+		String title;
+		try {
+			title = new String(uncompressed,pos,titleLen,"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new DataFormatException(String.format("Malformed title (%d bytes)",titleLen));
+		}
+		pos += titleLen;
+		
+		// Author
+		int authorLen = uncompressed[pos];
+		pos += 1;
+		String author;
+		try {
+			author = new String(uncompressed,pos,authorLen,"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			throw new DataFormatException(String.format("Malformed author (%d bytes)",authorLen));
+		}
+		pos += authorLen;
+		
+		BlockType[] data = new BlockType[SIZE*SIZE*SIZE];
+		pos += parseData(uncompressed, pos, len, data);
+		
+		if(pos != len) {
+			logger.error("{} bytes were not parsed: {}",len-pos,Arrays.copyOfRange(uncompressed, pos, len));
+		}
+		
+		return new MekoLevel(title,author,data);
+	}
+	
+	/**
+	 * Uncompress a DEFLATE data stream
+	 * @param compressed input compressed data
+	 * @param uncompressed output array. Must be large enough
+	 * @return length of uncompressed used
+	 */
+	static int inflate(byte[] compressed, int compressedlen, byte[] uncompressed) {
+		return inflate(compressed,0,compressedlen,uncompressed);
+	}
+	static int inflate(byte[] compressed, int offset, int compressedlen, byte[] uncompressed) {
+		try( InflaterInputStream inStream = new InflaterInputStream(new ByteArrayInputStream( compressed ) ) ) {
+			int len = offset;
+		    int readByte;
+		    while((readByte = inStream.read()) != -1) {
+		    	uncompressed[len] = (byte)readByte;
+		    	len++;
+		    }
+		    return len; 
+		} catch(IOException e) {
+			logger.error("Internal error while uncompressing data",e);
+			return 0;
+		}
+	}
+
+	static int inflateWrapped(byte[] compressed, int compressedlen,
+			byte[] uncompressed) throws DataFormatException {
+		Inflater decompresser = new Inflater(false);
+		decompresser.setInput(compressed, 0, compressedlen);
+		int uncompressedlen = decompresser.inflate(uncompressed);
+		return uncompressedlen;
+	}
+
+	/**
+	 * Parses the main data 
+	 * @param level 
+	 * @return Number of bytes parsed
+	 */
+	private static int parseData(byte[] data, int start, int end, BlockType[] level) {
+		assert level.length == SIZE*SIZE*SIZE;
+		int pos = 0;
+		
+		int i;
+		for(i=start;i<end && pos < level.length;i++) {
+			byte val = data[i];
+			BlockType blk = BlockType.fromByte(val);
+			if( blk.hasSubtypes() ) {
+				i++;
+				val = data[i];
+				try {
+					blk = blk.getSubtype(val);
+				} catch(IllegalArgumentException e) {
+					logger.error(e.getMessage());
+				}
+			}
+			level[pos] = blk;
+			pos++;
+		}
+		return i-start;
+	}
 	
 	final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
 	public static String bytesToHex(byte[] bytes) {
@@ -138,15 +237,16 @@ public class MekoReader {
 //				"/Users/blivens/dev/mekorama/levels/blocks/03_block_grass.png",
 //				"/Users/blivens/dev/mekorama/levels/blocks/04_blank_stone.png",
 //				"/Users/blivens/dev/mekorama/levels/blocks/axes.png",
-				"/Users/blivens/dev/mekorama/levels/blocks/all_blocks.png",
+//				"/Users/blivens/dev/mekorama/levels/blocks/all_blocks.png",
 //				"/Users/blivens/dev/mekorama/levels/blocks/water1.png",
 //				"/Users/blivens/dev/mekorama/levels/blocks/water2.png",
 //				"/Users/blivens/dev/mekorama/levels/blocks/water3.png",
 //				"/Users/blivens/dev/mekorama/levels/blocks/water4.png",
 //				"/Users/blivens/dev/mekorama/levels/blocks/water5.png",
-				"/Users/blivens/dev/mekorama/levels/blocks/pillars.png",
+//				"/Users/blivens/dev/mekorama/levels/blocks/pillars.png",
 //				"/Users/blivens/dev/mekorama/levels/title/a_Unknown.png",
 //				"/Users/blivens/dev/mekorama/levels/title/a_a.png",
+				"/Users/blivens/dev/mekorama/levels/title/pristine.png",
 //				"/Users/blivens/dev/mekorama/levels/title/a_b.png",
 //				"/Users/blivens/dev/mekorama/levels/title/abcd_abcd.png",
 //				"/Users/blivens/dev/mekorama/levels/title/b_Unknown.png",
@@ -187,6 +287,7 @@ public class MekoReader {
 				
 				// Print level info
 				System.out.println(filename);
+				//System.out.println(bytesToHex(level.getRawData()));
 				System.out.println(level.summarize());
 				//System.out.format("Length: %d\t%d\t%d%n",bytes.length,bytes[0],bytes.length-bytes[0]);
 				

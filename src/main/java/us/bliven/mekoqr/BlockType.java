@@ -183,6 +183,7 @@ public class BlockType {
 			.forEach((blk) -> knownTypes.put(blk.getValue(),blk) );
 	}
 	
+	private BlockType parent;
 	private final byte value;
 	private final String name;
 	private final String shortName;//1 char name
@@ -205,6 +206,12 @@ public class BlockType {
 		}
 		this.shortName = shortName;
 		this.subtypes = subtypes;
+		this.parent = null;
+		if(subtypes != null) {
+			for(BlockType sub : subtypes) {
+				sub.parent = this;
+			}
+		}
 	}
 
 	public static BlockType fromByte(byte b) {
@@ -218,6 +225,16 @@ public class BlockType {
 	}
 	public byte getValue() {
 		return value;
+	}
+	public byte[] getValues() {
+		if(parent == null) {
+			return new byte[] {value};
+		} else {
+			byte[] par = parent.getValues();
+			byte[] vals = Arrays.copyOf(par, par.length+1);
+			vals[par.length] = value;
+			return vals;
+		}
 	}
 	public String getName() {
 		return name;
@@ -240,5 +257,9 @@ public class BlockType {
 			}
 		}
 		throw new IllegalArgumentException(String.format("Unrecognized subtype 0x%x of %s",val, getName()));
+	}
+	
+	public String toString() {
+		return name;
 	}
 }

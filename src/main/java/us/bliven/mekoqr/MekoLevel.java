@@ -24,8 +24,6 @@
  
 package us.bliven.mekoqr;
 
-import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 import java.util.zip.DataFormatException;
 
 import org.slf4j.Logger;

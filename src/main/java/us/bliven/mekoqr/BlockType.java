@@ -259,6 +259,11 @@ public class BlockType {
 		throw new IllegalArgumentException(String.format("Unrecognized subtype 0x%x of %s",val, getName()));
 	}
 	
+	public BlockType getParent() {
+		return parent;
+	}
+	
+	@Override
 	public String toString() {
 		return name;
 	}

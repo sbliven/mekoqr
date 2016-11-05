@@ -24,10 +24,9 @@
  
 package us.bliven.mekoqr;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.DataFormatException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
  
 /**
  * Represents the contents of a Mekorama level.
@@ -51,11 +50,14 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class MekoLevel {
-	private static final Logger logger = LoggerFactory.getLogger(MekoLevel.class);
+	//private static final Logger logger = LoggerFactory.getLogger(MekoLevel.class);
 	
 	private String title;
 	private String author;
 	private BlockType[] data;
+	
+	private byte[] rawData;
+	private byte[] serializedData;
 	
 	/** Maximum level size */
 	public static final int SIZE = 16;
@@ -86,7 +88,20 @@ public class MekoLevel {
 		int index = indexForBlock(x, y, z);
 		return data[index];
 	}
-	
+	public List<Block> getBlocks() {
+		List<Block> blocks = new ArrayList<>(SIZE*SIZE*SIZE);
+		for(int y=0;y<SIZE;y++) {
+			for(int z=0;z<SIZE;z++) {
+				for(int x=0;x<SIZE;x++) {
+					BlockType blk = getBlock(x, y, z);
+					if(blk != BlockType.AIR) {
+						blocks.add(new Block(blk,x,y,z));
+					}
+				}
+			}
+		}
+		return blocks;
+	}
 	public void setBlock(int x, int y, int z,BlockType blk) {
 		int index = indexForBlock(x, y, z);
 		data[index] = blk;
@@ -154,6 +169,85 @@ public class MekoLevel {
 			.toString();
 	}
 
+	public String ascii() {
+		final String nl = System.getProperty("line.separator");
+		StringBuffer str = new StringBuffer();
+		
+		// header
+		for(int i=0;i<20;i++)
+			str.append('-');
+		str.append(String.format("%n| %16s |%n",getTitle()));
+		str.append(String.format("| %16s |%n","  by"));
+		str.append(String.format("| %16s |%n",getAuthor()));
+		for(int i=0;i<20;i++)
+			str.append('-');
+		str.append(nl);
+		
+		int[] bounds = getBounds();
+		int minX = bounds[0];
+		int maxX = bounds[1];
+		int minY = bounds[2];
+		int maxY = bounds[3];
+		int minZ = bounds[4];
+		int maxZ = bounds[5];
+		
+		for(int y=maxY;y>=minY;y--) {
+			//str.append("y=").append(y).append(nl);
+			// horizontal slice
+			for(int x = minX;x<=maxX+2;x++) {
+				str.append("-");
+			}
+			str.append(nl);
+			for(int z=minZ;z<=maxZ;z++) {
+				str.append("|");
+				for(int x = minX;x<=maxX;x++) {
+					BlockType blk = getBlock(x, y, z);
+					String name = blk.getShortName();
+					assert name.length() == 1 : blk.getName();
+					str.append(name);
+				}
+				str.append("|").append(nl);
+			}
+			for(int x = minX;x<=maxX+2;x++) {
+				str.append("-");
+			}
+			str.append(nl);
+		}
+		
+		return str.toString();
+	}
+
+	/**
+	 * Get the bounds of solid blocks in the level
+	 * @return a length-6 array with [minX,maxX, minY,maxY, minZ,maxZ]
+	 */
+	public int[] getBounds() {
+		int minX = SIZE;
+		int maxX = 0;
+		int minY = SIZE;
+		int maxY = 0;
+		int minZ = SIZE;
+		int maxZ = 0;
+		for(int y=0;y<SIZE;y++) {
+			for(int z=0;z<SIZE;z++) {
+				for(int x=0;x<SIZE;x++) {
+					BlockType blk = getBlock(x, y, z);
+					if(blk != BlockType.AIR) {
+						if(minX > x) minX = x;
+						if(maxX < x) maxX = x;
+						if(minY > y) minY = y;
+						if(maxY < y) maxY = y;
+						if(minZ > z) minZ = z;
+						if(maxZ < z) maxZ = z;
+					}
+				}
+			}
+		}
+		return new int[] {minX,maxX,minY,maxY,minZ,maxZ};
+	}
+
+
+
 	/**
 	 * line-based list of all non-air blocks in the level
 	 * 
@@ -169,5 +263,32 @@ public class MekoLevel {
 		}
 		return buf.toString();
 	}
+
+
+
+	public byte[] getRawData() {
+		return rawData;
+	}
+
+
+
+	public void setRawData(byte[] rawData) {
+		this.rawData = rawData;
+	}
+
+
+
+	public byte[] getSerializedData() {
+		return serializedData;
+	}
+
+
+
+	public void setSerializedData(byte[] serializedData) {
+		this.serializedData = serializedData;
+	}
+
+
+
 
 }

@@ -55,26 +55,7 @@ public class MekoWriter {
 	public MekoWriter() {
 		writer = new QRCodeWriter();
 	}
-	/**
-	 * Convert a string with [0-9A-F] characters into a byte array.
-	 * Whitespace is ignored. Must contain an even number of characters.
-	 * @param hex hex string, e.g. "4A0F 0007"
-	 * @return byte array, e.g. [0x4A, 0xFF, 0x00, 0x07]
-	 * @throws NumberFormatException
-	 */
-	public static byte[] hexToBytes(String hex) throws NumberFormatException {
-		// remove spaces
-		hex = hex.replaceAll("\\s", "");
-		if( hex.length() %2 != 0) {
-			throw new IllegalArgumentException("Not an even number of nibbles");
-		}
-		
-		byte[] bytes = new byte[hex.length()/2];
-		for(int i=0; i< hex.length(); i+=2) {
-			bytes[i/2] = (byte) Integer.parseInt(hex.substring(i, i+2),16);
-		}
-		return bytes;
-	}
+
 	
 	/**
 	 * Write the data bytes to a QR code

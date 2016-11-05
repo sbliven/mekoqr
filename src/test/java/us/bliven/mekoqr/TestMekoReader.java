@@ -41,7 +41,7 @@ public class TestMekoReader {
 		String correctTitle = "New Level";
 		String correctAuthor = "Unknown Author";
 		
-		byte[] compressed = MekoWriter.hexToBytes(compressedHex);
+		byte[] compressed = Utils.hexToBytes(compressedHex);
 		
 		//uncompress
 		int correctLen = correctTitle.length()+correctAuthor.length()+2+MekoLevel.SIZE*MekoLevel.SIZE*MekoLevel.SIZE;
@@ -52,10 +52,18 @@ public class TestMekoReader {
 		String title = new String(uncompressed,1,correctTitle.length());
 		assertEquals("Wrong title",correctTitle,title);
 		
+		// We use different compression settings, so this won't match compressed exactly
 		byte[] recompressed = new byte[len];
 		int recomplen = MekoWriter.deflateWrapped(uncompressed, recompressed);
-		assertEquals(compressedHex, MekoReader.bytesToHex(recompressed,recomplen));
-		assertEquals(compressed.length, recomplen);
+		assertTrue(recomplen>2);
+		assertTrue(recompressed[0] == 0x78);
+		assertTrue(recompressed[1] == 0x01);
+		
+		// Decompress yet again
+		byte[] reuncompressed = new byte[correctLen];
+		int len2 = MekoReader.inflate(recompressed, recomplen, reuncompressed);
+		assertEquals(len,len2);
+		assertEquals(Utils.bytesToHex(uncompressed,len), Utils.bytesToHex(reuncompressed,len2));
 		
 		
 	}
@@ -82,7 +90,7 @@ public class TestMekoReader {
 		uncompressedlen = MekoReader.inflateWrapped(compressed, compressedlen,
 				uncompressed);
 		assertEquals(plaintext.length, uncompressedlen);
-		assertEquals(MekoReader.bytesToHex(plaintext),MekoReader.bytesToHex(uncompressed,uncompressedlen));
+		assertEquals(Utils.bytesToHex(plaintext),Utils.bytesToHex(uncompressed,uncompressedlen));
 		
 //		System.out.format("Decompressed: (%d bytes)%n",uncompressedlen);
 //		System.out.println(MekoReader.bytesToHex(uncompressed,uncompressedlen));
@@ -90,7 +98,7 @@ public class TestMekoReader {
 		uncompressed = new byte[300];
 		uncompressedlen = MekoReader.inflate(compressed,compressedlen,uncompressed);
 		assertEquals(plaintext.length, uncompressedlen);
-		assertEquals(MekoReader.bytesToHex(plaintext),MekoReader.bytesToHex(uncompressed,uncompressedlen));
+		assertEquals(Utils.bytesToHex(plaintext),Utils.bytesToHex(uncompressed,uncompressedlen));
 
 //		System.out.format("Decompressed2: (%d bytes)%n",uncompressedlen);
 //		System.out.println(MekoReader.bytesToHex(uncompressed,uncompressedlen));

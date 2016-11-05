@@ -267,4 +267,10 @@ public class BlockType {
 	public String toString() {
 		return name;
 	}
+	public static boolean isSolid(BlockType blk) {
+		return blk != BlockType.AIR &&
+				blk != BlockType.WATER &&
+				blk != BlockType.B_BOT &&
+				blk != BlockType.R_BOT;
+	}
 }

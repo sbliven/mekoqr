@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,12 +16,13 @@ import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
+import javax.imageio.ImageIO;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.slf4j.Logger;
@@ -38,7 +40,6 @@ import com.google.zxing.NotFoundException;
 import com.google.zxing.Result;
 import com.google.zxing.ResultMetadataType;
 import com.google.zxing.client.j2se.BufferedImageLuminanceSource;
-import com.google.zxing.client.j2se.ImageReader;
 import com.google.zxing.common.HybridBinarizer;
 import com.google.zxing.qrcode.QRCodeReader;
 
@@ -76,6 +77,16 @@ public class MekoReader {
 		}
 		return level;
 	}
+	public MekoLevel readQR(InputStream is) throws NotFoundException, ChecksumException, FormatException, IOException, DataFormatException {
+		byte[] raw = readQRraw(is);
+		MekoLevel level = createLevel(raw);
+		if(storeRaw) {
+			level.setRawData(raw);
+		}
+		return level;
+
+	}
+	
 	/**
 	 * Read binary data from a QR code.
 	 * @param file Image containing the QR code
@@ -85,9 +96,7 @@ public class MekoReader {
 	 * @throws FormatException Illegal QR code or miss-detected code
 	 * @throws IOException Error reading image file
 	 */
-	private byte[] readQRraw(File file) throws NotFoundException, ChecksumException, FormatException, IOException {
-		BufferedImage image = ImageReader.readImage(file.toURI());
-
+	private byte[] readQRraw(BufferedImage image) throws NotFoundException, ChecksumException, FormatException, IOException {
 		// creating binary bitmap from source image
 	    LuminanceSource lumSource = new BufferedImageLuminanceSource(image);
 	    BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(lumSource));
@@ -122,10 +131,18 @@ public class MekoReader {
 		} else {
 			// Fall back on raw data
 			// warning may throw off byte alignment (typically starts with 3-nibble length var)
-			logger.warn("Using raw data for {}",file);
+			logger.warn("Using raw data");
 			byte[] bytes = result.getRawBytes();
 			return bytes;
 		}
+	}
+	private byte[] readQRraw(File file) throws NotFoundException, ChecksumException, FormatException, IOException {
+		BufferedImage image = ImageIO.read(file);
+		return readQRraw(image);
+	}
+	private byte[] readQRraw(InputStream is) throws NotFoundException, ChecksumException, FormatException, IOException {
+		BufferedImage image = ImageIO.read(is);
+		return readQRraw(image);
 	}
 	
 	private MekoLevel createLevel(byte[] raw) throws DataFormatException {

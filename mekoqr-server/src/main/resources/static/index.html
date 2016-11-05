@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Preview images</title>
+    <style>
+        #gallery .thumbnail{
+            width:150px;
+            height: 150px;
+            float:left;
+            margin:2px;
+        }
+        #gallery .thumbnail img{
+            width:150px;
+            height: 150px;
+        }
+
+    </style>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+</head>
+<body>
+<h2>Upload image</h2>
+
+<input type="file" id="fileinput" accept="image/*" />
+
+<div id="gallery"></div>
+<script src="gallery.js"></script>
+
+<div id="output"></div>
+</body>
+</html>

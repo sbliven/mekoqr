@@ -43,6 +43,7 @@ public class JsonTransformer {
 	}
 
 	public String render(Object model) {
-		return gson.toJson(model);
+		String json = gson.toJson(model);
+		return json;
 	}
 }

@@ -37,7 +37,7 @@
       </div>
       <div id="navbar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
-          <li class="active"><a href="#">Read</a></li>
+          <li class="active"><a href="#">Decode</a></li>
           <li><a href="/rotate">Rotate</a></li>
           <li><a href="https://github.com/sbliven/mekoqr">Github</a></li>
         </ul>
@@ -54,12 +54,12 @@
     </div>
 
 
-    <div class="page-header">
-      <h1>Upload Image</h1>
+    <div class="row">
+      <div id="uploadwell" class="col-md-4 col-md-offset-4 text-center block-center well primary">
+        <h1>Upload Image</h1>
+        <input id="fileinput" type="file" accept="image/*" />
+      </div>
     </div>
-    <p>
-      <input id="fileinput" type="file" accept="image/*" />
-    </p>
 
     <div id="results" class="row">
       <div id="image" class="col-sm-4">Waiting for upload...</div>
@@ -67,59 +67,69 @@
         <!-- <h3 id="levelTitle">Title</h3>
         <h4 id="levelAuthor">Author</h4>
         <div>
-          <button data-toggle="collapse" data-target="#compressedData">Show QR code data</button>
-          <div id="compressedData" class="collapse panel panel-default">
-            <div class="panel-body">
-              01 ... 78 01
-            </div>
-          </div>
-        </div>
-        <div>
-          <button data-toggle="collapse" data-target="#uncompressedData">Show uncompressed data</button>
-          <div id="uncompressedData" class="collapse panel panel-default">
-            <div class="panel-body">
-              00 00 00 00
-            </div>
-          </div>
-        </div> -->
+        <button data-toggle="collapse" data-target="#compressedData">Show QR code data</button>
+        <div id="compressedData" class="collapse panel panel-default">
+        <div class="panel-body">
+        01 ... 78 01
       </div>
     </div>
-    <div id="output" class="row">
-      <div class="col-sm-12">
-        <table class="table table-condensed table-hover">
-          <thead>
-            <tr>
-              <th>X</th>
-              <th>Y</th>
-              <th>Z</th>
-              <th>Block Type</th>
-              <th>Block ID</th>
-              <th>Orientation</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-    </div>
-    <div id="json" class="row"></div>
   </div>
+  <div>
+  <button data-toggle="collapse" data-target="#uncompressedData">Show uncompressed data</button>
+  <div id="uncompressedData" class="collapse panel panel-default">
+  <div class="panel-body">
+  00 00 00 00
+</div>
+</div>
+</div> -->
+</div>
+</div>
+<div id="output" class="row">
+  <div class="col-sm-12">
+    <table class="table table-condensed table-hover">
+      <thead>
+        <tr>
+          <th>X</th>
+          <th>Y</th>
+          <th>Z</th>
+          <th>Block Type</th>
+          <th>Block ID</th>
+          <th>Orientation</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+<div id="json" class="row"></div>
+</div>
 
 
 
-  <!-- jQuery -->
-  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-  <!-- Bootstrap -->
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-  <script src="js/read.js"></script>
-  <script>
-  $("#fileinput").change(function() {
-    if(!this.files || this.files.length != 1) {
-      throw "Wrong number of files: "+this.files;
-    }
+<!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<!-- Bootstrap -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="js/read.js"></script>
+<script>
+$("#fileinput").change(function() {
+  if(!this.files || this.files.length < 1) {
+    throw "No file given";
+  }
+  try {
     previewImage(this.files[0],$("#image"));
+  } catch(e){
+    var $err = $("<pre></pre>")
+      .addClass("alert alert-danger")
+      .text(e.message || e);
+    $("#image").empty().append($err);
+    $("#maininfo").empty();
+    return;
+  } finally {
     $("#results").show();
-    uploadFile(this.files[0], $("#maininfo"),$("#output"));
-  });
-  </script>
+  }
+  uploadFile(this.files[0], $("#maininfo"),$("#output"));
+});
+</script>
 </body>
 </html>

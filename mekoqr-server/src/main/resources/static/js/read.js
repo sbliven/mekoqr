@@ -3,6 +3,10 @@ function previewImage(file,$div) {
   var imageType = /image.*/;
 
   if (!file.type.match(imageType)) {
+    var $err = $("<pre></pre>")
+      .addClass("alert alert-danger")
+      .text("File Type must be an image");
+    $div.empty().append($err);
     throw "File Type must be an image";
   }
 
@@ -42,6 +46,11 @@ function uploadFile(file,$infoDiv, $tableDiv){
         .addClass("pre-scrollable")
         .text(JSON.stringify(level, null, 2));
       $("#json").append($pre);
+    } else {
+      var $err = $("<pre></pre>")
+        .addClass("alert alert-danger")
+        .text(xhr.responseText);
+      $infoDiv.empty().append($err);
     }
   };
   fd.append("uploaded_file", file);

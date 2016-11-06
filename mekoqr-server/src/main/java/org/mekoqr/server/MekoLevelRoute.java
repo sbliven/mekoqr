@@ -52,23 +52,30 @@ public class MekoLevelRoute implements Route {
 
 	@Override
 	public MekoLevel handle(Request request, Response response) {
-		logger.info("Requested json");
 	    request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/cache"));
 	    
 	    try {
 	    	Part part = request.raw().getPart("uploaded_file");
-	    	logger.info("Got part {}",part != null);
 	    	try (InputStream is = part.getInputStream()) {
-	    		logger.info("Got input stream with {} available",is.available());
+	    		logger.debug("Got input stream with {} available",is.available());
 
 	    		MekoReader reader = new MekoReader(true, true);
 	    		MekoLevel level = reader.readQR(is);
-	    		logger.info("Parsed the level");
+	    		logger.debug("Parsed the level");
 	    		return level;
 	    	}
-	    } catch (IOException | ServletException | NotFoundException | ChecksumException | FormatException | DataFormatException e) {
-	    	logger.error(e.getMessage(),e);
-	    	halt(599,e.getMessage());
+	    } catch(NotFoundException e) {
+	    	// NotFoundExceptions don't have message or stack trace
+	    	logger.error("No valid QR code found");
+	    	halt(500,"No valid QR code found");
+	    	return null;
+	    } catch (IOException | ServletException | ChecksumException | FormatException | DataFormatException e) {
+	    	String msg = e.getMessage();
+	    	if(msg == null) {
+	    		msg = e.getClass().getSimpleName();
+	    	}
+	    	logger.error(msg,e);
+	    	halt(500,msg);
 	    	return null;
 		}
 	}

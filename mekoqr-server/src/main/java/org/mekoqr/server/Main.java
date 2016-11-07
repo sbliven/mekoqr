@@ -13,7 +13,7 @@ public class Main
 	
     public static void main( String[] args )
     {
-    	boolean localhost = true;
+    	boolean localhost = false;
     	port(8888);
     	
     	
@@ -25,6 +25,7 @@ public class Main
     	    staticFiles.location("/static");
     	}
 
+    	get("/", (req, res) -> {res.redirect("/index.html");return "Moved";});
     	get("/hello", (req, res) -> "Hello World");
     	    	
 		post("/json", new MekoLevelRoute(),new JsonTransformer());

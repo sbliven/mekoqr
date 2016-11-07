@@ -14,6 +14,65 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
+
+	<build>
+		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>mekoqr-server</id>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<!-- Minimizing removes jmol and log4j -->
+							<minimizeJar>false</minimizeJar>
+							<outputFile>target/mekoqr-uberjar-${project.version}.jar</outputFile>
+							<artifactSet>
+								<excludes>
+									<exclude>junit:junit</exclude>
+								</excludes>
+							</artifactSet>
+							<filters>
+								<filter>
+									<!-- Exclude signature files -->
+									<artifact>*:*</artifact>
+									<excludes>
+										<exclude>META-INF/*.SF</exclude>
+										<exclude>META-INF/*.DSA</exclude>
+										<exclude>META-INF/*.RSA</exclude>
+									</excludes>
+								</filter>
+							</filters>
+							<transformers>
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<manifestEntries>
+										<Specification-Vendor>bliven.us</Specification-Vendor>
+										<Implementation-Vendor>bliven.us</Implementation-Vendor>
+										<Specification-Version>${project.version}</Specification-Version>
+										<Implementation-Version>${project.version}</Implementation-Version>
+										<Specification-Title>${project.name}</Specification-Title>
+										<Implementation-Title>${project.name}</Implementation-Title>
+										<Main-Class>org.mekoqr.server.Main</Main-Class>
+									</manifestEntries>
+								</transformer>
+								<!-- This bit merges the various META-INF/services files -->
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+							</transformers>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
+
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>

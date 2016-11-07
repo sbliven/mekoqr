@@ -29,6 +29,7 @@ import static spark.Spark.halt;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.DataFormatException;
+import java.util.zip.ZipException;
 
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletException;
@@ -68,6 +69,10 @@ public class MekoLevelRoute implements Route {
 	    	// NotFoundExceptions don't have message or stack trace
 	    	logger.error("No valid QR code found");
 	    	halt(500,"No valid QR code found");
+	    	return null;
+	    } catch (ZipException e) {
+	    	logger.error("Invalid QR code");
+	    	halt(500,"QR code is not a Mekorama level.");
 	    	return null;
 	    } catch (IOException | ServletException | ChecksumException | FormatException | DataFormatException e) {
 	    	String msg = e.getMessage();

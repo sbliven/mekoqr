@@ -28,13 +28,14 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.util.zip.DataFormatException;
+import java.util.zip.ZipException;
 
 import org.junit.Test;
 
 public class TestMekoReader {
 
 	@Test
-	public void testPristineLevel() {
+	public void testPristineLevel() throws ZipException, IOException {
 		String compressedHex = "78 01 ED C0 41 0A 00 10 10 40 51 5B 1B 67 70 15 "
 				+ "7B D9 39 C2 94 A2 51 C2 5C DF 3D F4 9F 2F 62 31 CB 95 11 AA 76 9D A6 31 "
 				+ "9D DD E6 72 00 00 00 00 00 E0 7B 0F 43 81 08 DD ";

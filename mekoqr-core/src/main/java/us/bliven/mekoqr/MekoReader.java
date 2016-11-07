@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
+import java.util.zip.ZipException;
 
 import javax.imageio.ImageIO;
 
@@ -145,7 +146,7 @@ public class MekoReader {
 		return readQRraw(image);
 	}
 	
-	private MekoLevel createLevel(byte[] raw) throws DataFormatException {
+	private MekoLevel createLevel(byte[] raw) throws DataFormatException, ZipException, IOException {
 		byte[] b = Arrays.copyOfRange(raw, 4, raw.length);
 
 		// Level consists of two strings (1 + 16 bytes) and the blocks, which can be 1 or 2 bytes
@@ -202,11 +203,13 @@ public class MekoReader {
 	 * @param compressed input compressed data
 	 * @param uncompressed output array. Must be large enough
 	 * @return length of uncompressed used
+	 * @throws IOException 
+	 * @throws ZipException 
 	 */
-	static int inflate(byte[] compressed, int compressedlen, byte[] uncompressed) {
+	static int inflate(byte[] compressed, int compressedlen, byte[] uncompressed) throws ZipException, IOException {
 		return inflate(compressed,0,compressedlen,uncompressed);
 	}
-	static int inflate(byte[] compressed, int offset, int compressedlen, byte[] uncompressed) {
+	static int inflate(byte[] compressed, int offset, int compressedlen, byte[] uncompressed) throws ZipException, IOException {
 		try( InflaterInputStream inStream = new InflaterInputStream(new ByteArrayInputStream( compressed ) ) ) {
 			int len = offset;
 		    int readByte;
@@ -215,9 +218,6 @@ public class MekoReader {
 		    	len++;
 		    }
 		    return len; 
-		} catch(IOException e) {
-			logger.error("Internal error while uncompressing data",e);
-			return 0;
 		}
 	}
 

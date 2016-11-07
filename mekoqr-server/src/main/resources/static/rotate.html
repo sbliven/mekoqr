@@ -5,7 +5,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Preview images</title>
+  <title>Rotate Mekorama Level</title>
 
   <!-- Favicon -->
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
@@ -34,12 +34,12 @@
   <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
       <div class="navbar-header">
-        <a class="navbar-brand" href="#">MekoQR</a>
+        <a class="navbar-brand" href="/index.html">MekoQR</a>
       </div>
       <div id="navbar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
           <li><a href="/decode.html">Decode</a></li>
-          <li><a href="/rotate.html">Rotate</a></li>
+          <li class="active"><a href="#">Rotate</a></li>
           <li><a href="https://github.com/sbliven/mekoqr">Github</a></li>
         </ul>
       </div><!--/.nav-collapse -->
@@ -49,46 +49,19 @@
   <div class="container theme-showcase" role="main">
 
     <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron text-center center-block">
-        <img class="img-responsive center-block" src="img/logo.png" width="350" height="350"/>
-      <h1>MekoQR</h1>
-      <p class="lead">The unofficial site for inspecting <a href="http://www.mekorama.com/">Mekorama</a> levels</p>
+    <div class="jumbotron">
+      <h1>Rotate Level</h1>
+      <p class="lead">Rotate the thumbnail of a level</p>
     </div>
+
+    <div class="alert alert-warning">Under construction</div>
   </div>
 
-  <div class="row">
-    <div class="col-md-3 col-md-offset-3">
-      <a href="/decode.html" class="btn btn-info bigbutton" role="button">Decode</a>
-    </div>
-    <div class="col-md-3">
-      <a href="/rotate.html" class="btn btn-info bigbutton" role="button">Rotate</a>
-    </div>
-  </div>
+
 
   <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
   <!-- Bootstrap -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-  <script src="js/read.js"></script>
-  <script>
-  $("#fileinput").change(function() {
-    if(!this.files || this.files.length < 1) {
-      throw "No file given";
-    }
-    try {
-      previewImage(this.files[0],$("#image"));
-    } catch(e){
-      var $err = $("<pre></pre>")
-        .addClass("alert alert-danger")
-        .text(e.message || e);
-      $("#image").empty().append($err);
-      $("#maininfo").empty();
-      return;
-    } finally {
-      $("#results").show();
-    }
-    uploadFile(this.files[0], $("#maininfo"),$("#output"));
-  });
-  </script>
 </body>
 </html>

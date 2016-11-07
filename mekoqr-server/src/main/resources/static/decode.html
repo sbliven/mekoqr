@@ -5,7 +5,14 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Read Mekorama Level</title>
+  <title>Decode Mekorama Level</title>
+
+  <!-- Favicon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32">
+  <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
 
   <!-- Bootstrap -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -27,18 +34,12 @@
   <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
       <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="#">MekoQR</a>
+        <a class="navbar-brand" href="/index.html">MekoQR</a>
       </div>
       <div id="navbar" class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
           <li class="active"><a href="#">Decode</a></li>
-          <li><a href="/rotate">Rotate</a></li>
+          <li><a href="/rotate.html">Rotate</a></li>
           <li><a href="https://github.com/sbliven/mekoqr">Github</a></li>
         </ul>
       </div><!--/.nav-collapse -->
@@ -63,27 +64,8 @@
 
     <div id="results" class="row">
       <div id="image" class="col-sm-4">Waiting for upload...</div>
-      <div id="maininfo" class="col-sm-8">Parsing level...
-        <!-- <h3 id="levelTitle">Title</h3>
-        <h4 id="levelAuthor">Author</h4>
-        <div>
-        <button data-toggle="collapse" data-target="#compressedData">Show QR code data</button>
-        <div id="compressedData" class="collapse panel panel-default">
-        <div class="panel-body">
-        01 ... 78 01
-      </div>
-    </div>
+      <div id="maininfo" class="col-sm-8"></div>
   </div>
-  <div>
-  <button data-toggle="collapse" data-target="#uncompressedData">Show uncompressed data</button>
-  <div id="uncompressedData" class="collapse panel panel-default">
-  <div class="panel-body">
-  00 00 00 00
-</div>
-</div>
-</div> -->
-</div>
-</div>
 <div id="output" class="row">
   <div class="col-sm-12">
     <table class="table table-condensed table-hover">
@@ -110,7 +92,7 @@
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 <!-- Bootstrap -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<script src="js/read.js"></script>
+<script src="js/decode.js"></script>
 <script>
 $("#fileinput").change(function() {
   if(!this.files || this.files.length < 1) {
@@ -118,6 +100,7 @@ $("#fileinput").change(function() {
   }
   try {
     previewImage(this.files[0],$("#image"));
+    $("#maininfo").empty().text("Parsing level...")
   } catch(e){
     var $err = $("<pre></pre>")
       .addClass("alert alert-danger")

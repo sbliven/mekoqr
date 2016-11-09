@@ -2,12 +2,15 @@
 <configuration status="WARN">
 	<appenders>
 		<Console name="Console" target="SYSTEM_ERR">
-			<PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"/>
+			<PatternLayout pattern="%d{HH:mm:ss} [%t] %-5level %logger{36} - %msg%n" />
 		</Console>
 	</appenders>
 	<loggers>
 		<root level="info">
-			<appender-ref ref="Console"/>
+			<appender-ref ref="Console" />
 		</root>
+		<logger name="us.bliven" additivity="false">
+			<appender-ref ref="Console" />
+		</logger>
 	</loggers>
 </configuration>

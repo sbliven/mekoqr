@@ -65,54 +65,54 @@
     <div id="results" class="row">
       <div id="image" class="col-sm-4">Waiting for upload...</div>
       <div id="maininfo" class="col-sm-8"></div>
+    </div>
+    <div id="output" class="row">
+      <div class="col-sm-12">
+        <table class="table table-condensed table-hover">
+          <thead>
+            <tr>
+              <th>X</th>
+              <th>Y</th>
+              <th>Z</th>
+              <th>Block Type</th>
+              <th>Block ID</th>
+              <th>Orientation</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+    <div id="json" class="row"></div>
   </div>
-<div id="output" class="row">
-  <div class="col-sm-12">
-    <table class="table table-condensed table-hover">
-      <thead>
-        <tr>
-          <th>X</th>
-          <th>Y</th>
-          <th>Z</th>
-          <th>Block Type</th>
-          <th>Block ID</th>
-          <th>Orientation</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
-</div>
-<div id="json" class="row"></div>
-</div>
 
 
 
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-<!-- Bootstrap -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<script src="js/decode.js"></script>
-<script>
-$("#fileinput").change(function() {
-  if(!this.files || this.files.length < 1) {
-    throw "No file given";
-  }
-  try {
-    previewImage(this.files[0],$("#image"));
-    $("#maininfo").empty().text("Parsing level...")
-  } catch(e){
-    var $err = $("<pre></pre>")
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <!-- Bootstrap -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  <script src="js/decode.js"></script>
+  <script>
+  $("#fileinput").change(function() {
+    if(!this.files || this.files.length < 1) {
+      throw "No file given";
+    }
+    try {
+      previewImage(this.files[0],$("#image"));
+      $("#maininfo").empty().text("Parsing level...")
+    } catch(e){
+      var $err = $("<pre></pre>")
       .addClass("alert alert-danger")
       .text(e.message || e);
-    $("#image").empty().append($err);
-    $("#maininfo").empty();
-    return;
-  } finally {
-    $("#results").show();
-  }
-  uploadFile(this.files[0], $("#maininfo"),$("#output"));
-});
-</script>
+      $("#image").empty().append($err);
+      $("#maininfo").empty();
+      return;
+    } finally {
+      $("#results").show();
+    }
+    uploadFile(this.files[0], $("#maininfo"),$("#output"));
+  });
+  </script>
 </body>
 </html>

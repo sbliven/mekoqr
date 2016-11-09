@@ -70,7 +70,25 @@ public class Rotate {
 		
 		level.setAuthor("Rotated "+90*(rotations%4));
 		
-		// Rotate the data matrix clockwise
+		rotate(level, rotations);
+		
+		MekoWriter writer = new MekoWriter();
+		File out = new File(outputFile);
+		try {
+			writer.write(out, level);
+		} catch (WriterException | IOException e) {
+			System.err.println("Error writing rotated file: "+e.getMessage());
+			System.exit(1); return;
+		}
+	}
+
+	/**
+	 * Rotate the data matrix clockwise
+	 * 
+	 * @param level Level (rotated in place)
+	 * @param rotations number of rotations (clockwise when viewed from above)
+	 */
+	public static void rotate(MekoLevel level, int rotations) {
 		// Swap (x,z) for (SIZE-z,x)
 		for(int x=0;x<SIZE/2;x++) {
 			for(int z=0;z<SIZE/2;z++) {
@@ -94,15 +112,6 @@ public class Rotate {
 					level.setBlock(z,y,SIZE-1-x, pos4);
 				}
 			}
-		}
-		
-		MekoWriter writer = new MekoWriter();
-		File out = new File(outputFile);
-		try {
-			writer.write(out, level);
-		} catch (WriterException | IOException e) {
-			System.err.println("Error writing rotated file: "+e.getMessage());
-			System.exit(1); return;
 		}
 	}
 

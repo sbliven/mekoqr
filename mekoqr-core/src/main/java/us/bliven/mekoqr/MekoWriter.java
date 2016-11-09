@@ -25,11 +25,13 @@
 package us.bliven.mekoqr;
 
 import static us.bliven.mekoqr.MekoLevel.SIZE;
+
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -52,6 +54,7 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
  */
 public class MekoWriter {
 	private QRCodeWriter writer;
+	private int pngSize = 600;
 	public MekoWriter() {
 		writer = new QRCodeWriter();
 	}
@@ -65,14 +68,26 @@ public class MekoWriter {
 	 * @throws IOException for errors writing the file
 	 */
 	public void write(File outfile, byte[] data, int len) throws WriterException, IOException {
+		BufferedImage image = generateQR(data, len);
+		// output as PNG
+		ImageIO.write(image, "png", outfile);
+	}
+	public void write(OutputStream out, byte[] data, int len) throws WriterException, IOException {
+		BufferedImage image = generateQR(data, len);
+		// output as PNG
+		ImageIO.write(image, "png", out);
+	}
+
+	private BufferedImage generateQR(byte[] data, int len)
+			throws WriterException {
 		Map<EncodeHintType, Object> hints = new HashMap<>();
 		hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
 		
 		// ISO-8859-1 is defined for all bytes, unlike UTF-8 or ASCII, so it won't mangle the data
 		String contents = new String(data, 0, len, Charset.forName("ISO-8859-1"));
 		
-		int width = 600;
-		int height = 600;
+		int width = pngSize;
+		int height = pngSize;
 		
 		// create QR code
 		BitMatrix matrix = writer.encode(contents, BarcodeFormat.QR_CODE, width,height, hints);
@@ -90,9 +105,7 @@ public class MekoWriter {
 				}
 			}
 		}
-		// output as PNG
-		ImageIO.write(image, "png", outfile);
-
+		return image;
 	}
 	
 	public static int encodeLevel(MekoLevel level, byte[] uncompressed) {
@@ -144,6 +157,22 @@ public class MekoWriter {
 		
 		write(file,compressed,len+4);
 	}
+	public void write(OutputStream out, MekoLevel level ) throws WriterException, IOException {
+		byte[] encoded = new byte[17*2+SIZE*SIZE*SIZE*2];
+		int len = encodeLevel(level, encoded);
+		
+		byte[] compressed = new byte[len+4];
+		len = deflateWrapped(encoded, compressed);
+		for(int i=len-1;i>=0;i--) {
+			compressed[i+4] = compressed[i];
+		}
+		compressed[0] = 0x01;
+		compressed[1] = 0x13;
+		compressed[2] = 0x0D;
+		compressed[3] = (byte)0xFC;
+		
+		write(out,compressed,len+4);
+	}
 	
 	/**
 	 * Compress into a zlib-wrapped DEFLATE data stream
@@ -158,5 +187,7 @@ public class MekoWriter {
 		int compressedlen = compressor.deflate(compressed);
 		return compressedlen;
 	}
+
+
 
 }

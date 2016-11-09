@@ -53,15 +53,68 @@
       <h1>Rotate Level</h1>
       <p class="lead">Rotate the thumbnail of a level</p>
     </div>
-
-    <div class="alert alert-warning">Under construction</div>
   </div>
 
+  <div class="row">
+    <div id="uploadwell" class="col-md-4 col-md-offset-4 text-center block-center well primary">
+      <h1>Upload Image</h1>
+      <input id="fileinput" type="file" accept="image/*" />
+      <div><strong>Rotate (clockwise)</strong></div>
+
+      <div id="rotationbtns" class="btn-group" data-toggle="buttons">
+        <label class="btn btn-primary active">
+          <input type="radio" name="options" id="option1" autocomplete="off" checked> 90 </input>
+        </label>
+        <label class="btn btn-primary">
+          <input type="radio" name="options" id="option2" autocomplete="off"> 180 </input>
+        </label>
+        <label class="btn btn-primary">
+          <input type="radio" name="options" id="option3" autocomplete="off"> 270 </input>
+        </label>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="results" class="row">
+    <div class="col-sm-12 col-md-6 col-lg-3 col-lg-offset-3">
+      <h3>Input</h3>
+      <div id="image" >Waiting for upload...</div>
+    </div>
+    <div class="col-sm-12 col-md-6 col-lg-3">
+      <h3>Output</h3>
+      <div id="outputQR"></div>
+    </div>
+  </div>
 
 
   <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
   <!-- Bootstrap -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+  <script src="js/rotate.js"></script>
+  <script>
+  $("#fileinput").change(function() {
+    if(!this.files || this.files.length < 1) {
+      throw "No file given";
+    }
+    try {
+      previewImage(this.files[0],$("#image"));
+      $("#outputQR").empty().text("Parsing level...")
+    } catch(e){
+      var $err = $("<pre></pre>")
+      .addClass("alert alert-danger")
+      .text(e.message || e);
+      $("#image").empty().append($err);
+      $("#outputQR").empty();
+      return;
+    } finally {
+      $("#results").show();
+    }
+    var rotation = parseInt( $("#rotationbtns .active").text() );
+    uploadFile(this.files[0], $("#outputQR"), rotation/90);
+  });
+  </script>
 </body>
 </html>

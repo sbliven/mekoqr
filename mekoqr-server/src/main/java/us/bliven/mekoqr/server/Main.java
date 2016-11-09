@@ -1,4 +1,4 @@
-package org.mekoqr.server;
+package us.bliven.mekoqr.server;
 
 import static spark.Spark.*;
 import spark.ResponseTransformer;
@@ -13,7 +13,7 @@ public class Main
 	
     public static void main( String[] args )
     {
-    	boolean localhost = false;
+    	boolean localhost = true;
     	port(8888);
     	
     	
@@ -26,8 +26,9 @@ public class Main
     	}
 
     	get("/", (req, res) -> {res.redirect("/index.html");return "Moved";});
-    	get("/hello", (req, res) -> "Hello World");
     	    	
 		post("/json", new MekoLevelRoute(),new JsonTransformer());
+		
+		post("/rotate/:rotations", new RotateRoute());
     }
 }

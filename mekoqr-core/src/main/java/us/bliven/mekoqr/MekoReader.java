@@ -153,9 +153,9 @@ public class MekoReader {
 		byte[] uncompressed = new byte[17*2+SIZE*SIZE*SIZE*2];
 		int len = MekoReader.inflate(b,b.length,uncompressed);
 		
-		if(logger.isInfoEnabled()) {
+		if(logger.isDebugEnabled()) {
 			String hex = Utils.bytesToHex(uncompressed);
-			logger.info("Decompressed {} bytes starting with {}{}",len, hex.substring(0, Math.min(len, 30)),len>30?"...":"");
+			logger.debug("Decompressed {} bytes starting with {}{}",len, hex.substring(0, Math.min(len, 30)),len>30?"...":"");
 		}
 
 		// Parse data

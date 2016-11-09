@@ -1,4 +1,5 @@
-
+/* After selecting a file, add that image to the specified div
+ */
 function previewImage(file,$div) {
   var imageType = /image.*/;
 

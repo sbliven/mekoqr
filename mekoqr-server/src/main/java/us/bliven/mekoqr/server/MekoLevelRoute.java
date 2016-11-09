@@ -22,12 +22,13 @@
  *
  */
  
-package org.mekoqr.server;
+package us.bliven.mekoqr.server;
 
 import static spark.Spark.halt;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.zip.DataFormatException;
 import java.util.zip.ZipException;
 
@@ -54,9 +55,23 @@ public class MekoLevelRoute implements Route {
 	@Override
 	public MekoLevel handle(Request request, Response response) {
 	    request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/cache"));
-	    
+	    logger.debug("Handling MekoLevel");
 	    try {
 	    	Part part = request.raw().getPart("uploaded_file");
+	    	if(part == null) {
+	    		Collection<Part> parts = request.raw().getParts();
+	    		if(!parts.isEmpty()) {
+	    			part = parts.iterator().next();
+	    			if( part != null) {
+	    				logger.warn("Using POST multipart '{}' instead of 'uploaded_file'",part.getName());
+	    			}
+	    		}
+	    	}
+	    	if(part == null) {
+		    	logger.error("No uploaded_file attached");
+		    	halt(500,"Incomplete POST request");
+		    	return null;
+	    	}
 	    	try (InputStream is = part.getInputStream()) {
 	    		logger.debug("Got input stream with {} available",is.available());
 

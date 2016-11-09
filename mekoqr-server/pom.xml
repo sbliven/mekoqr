@@ -58,7 +58,7 @@
 										<Implementation-Version>${project.version}</Implementation-Version>
 										<Specification-Title>${project.name}</Specification-Title>
 										<Implementation-Title>${project.name}</Implementation-Title>
-										<Main-Class>org.mekoqr.server.Main</Main-Class>
+										<Main-Class>us.bliven.mekoqr.server.Main</Main-Class>
 									</manifestEntries>
 								</transformer>
 								<!-- This bit merges the various META-INF/services files -->

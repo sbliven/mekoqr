@@ -20,8 +20,7 @@ function previewImage(file,$div) {
   reader.readAsDataURL(file);
 }
 
-function uploadFile(file,$infoDiv, $tableDiv){
-  var url = '/json';
+function uploadFile(url,file,$infoDiv, $tableDiv){
   var xhr = new XMLHttpRequest();
   var fd = new FormData();
   xhr.open("POST", url, true);

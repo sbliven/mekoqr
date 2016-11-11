@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  {{>header.html.hbs}}
+  <title>Preview images</title>
+</head>
+<body>
+
+  <!-- Fixed navbar -->
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#">MekoQR</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="{{webroot}}/decode.html">Decode</a></li>
+          <li><a href="{{webroot}}/rotate.html">Rotate</a></li>
+          <li><a href="https://github.com/sbliven/mekoqr">Github</a></li>
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div>
+  </nav>
+
+  <div class="container theme-showcase" role="main">
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron text-center center-block">
+        <img class="img-responsive center-block" src="{{webroot}}/img/logo.png" width="350" height="350"/>
+      <h1>MekoQR</h1>
+      <p class="lead">The unofficial site for inspecting <a href="http://www.mekorama.com/">Mekorama</a> levels</p>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-3 col-md-offset-3">
+      <a href="{{webroot}}/decode.html" class="btn btn-info bigbutton" role="button">Decode</a>
+    </div>
+    <div class="col-md-3">
+      <a href="{{webroot}}/rotate.html" class="btn btn-info bigbutton" role="button">Rotate</a>
+    </div>
+  </div>
+
+  {{>footerscripts.html.hbs}}
+  <script>
+  $("#fileinput").change(function() {
+    if(!this.files || this.files.length < 1) {
+      throw "No file given";
+    }
+    try {
+      previewImage(this.files[0],$("#image"));
+    } catch(e){
+      var $err = $("<pre></pre>")
+        .addClass("alert alert-danger")
+        .text(e.message || e);
+      $("#image").empty().append($err);
+      $("#maininfo").empty();
+      return;
+    } finally {
+      $("#results").show();
+    }
+    uploadFile(this.files[0], $("#maininfo"),$("#output"));
+  });
+  </script>
+</body>
+</html>

@@ -57,10 +57,17 @@ public class RotateRoute implements Route {
 		
 		// Rotate level
 		int rotations;
+		String rotationsParam = request.queryParams("rotation");
+		if( rotationsParam == null) {
+			logger.warn("Require parameter rotation=[1,2,3]");
+			halt(400,"Require parameter rotation=[1,2,3]");
+			return null;
+		}
 		try {
-			rotations = Integer.parseInt(request.params(":rotations"));
-		} catch( NumberFormatException | NullPointerException e) {
-			logger.warn("Invalid rotation parameter {}",request.params(":rotations"));
+			
+			rotations = Integer.parseInt(rotationsParam);
+		} catch( NumberFormatException e) {
+			logger.warn("Invalid rotation parameter {}",rotationsParam);
 			halt(400,"Invalid rotation parameter");
 			return null;
 		}

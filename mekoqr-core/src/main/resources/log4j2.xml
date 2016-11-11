@@ -9,7 +9,7 @@
 		<root level="info">
 			<appender-ref ref="Console" />
 		</root>
-		<logger name="us.bliven" additivity="false">
+		<logger name="us.bliven" level="debug" additivity="false">
 			<appender-ref ref="Console" />
 		</logger>
 	</loggers>

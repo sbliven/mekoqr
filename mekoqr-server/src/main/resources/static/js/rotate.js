@@ -20,8 +20,7 @@ function previewImage(file,$div) {
   reader.readAsDataURL(file);
 }
 
-function uploadFile(file,$div,rotation){
-  var url = '/rotate/'+rotation;
+function uploadFile(url,file,$div,rotation){
   var xhr = new XMLHttpRequest();
   xhr.responseType = "blob";
   xhr.open("POST", url, true);

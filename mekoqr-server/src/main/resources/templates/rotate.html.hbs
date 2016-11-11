@@ -68,12 +68,15 @@
   {{>footerscripts.html.hbs}}
   <script src="{{webroot}}/js/rotate.js"></script>
   <script>
+  var qrimage = null;
   $("#fileinput").change(function() {
     if(!this.files || this.files.length < 1) {
+      qrimage = null;
       throw "No file given";
     }
+    qrimage = this.files[0]
     try {
-      previewImage(this.files[0],$("#image"));
+      previewImage(qrimage,$("#image"));
       $("#outputQR").empty().text("Parsing level...")
     } catch(e){
       var $err = $("<pre></pre>")
@@ -86,7 +89,7 @@
       $("#results").show();
     }
     var rotation = parseInt( $("#rotationbtns .active").text() );
-    uploadFile("{{webroot}}/rotate.png?rotation="+rotation,this.files[0], $("#outputQR"), rotation/90);
+    uploadFile("{{webroot}}/rotate.png?rotation="+rotation/90,this.files[0], $("#outputQR"));
   });
   </script>
 </body>

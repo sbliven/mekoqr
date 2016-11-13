@@ -121,7 +121,9 @@ public class BlockType {
 			new BlockType( 0x02,"B-bot(N)","B"),
 			new BlockType( 0x03,"B-bot(W)","B"),
 	});
-	public static final BlockType ZAPPER = new BlockType(0x10,"Zapper","Z");
+	public static final BlockType ZAPPER = new BlockType(0x10,"Zapper","Z", new BlockType[] {
+			new BlockType( 0x00,"Zapper(U)","Z"),
+	});
 	public static final BlockType DRAGGABLE = new BlockType(0x11,"Draggable","d");
 	public static final BlockType DESERT = new BlockType(0x12,"Desert","#");
 	public static final BlockType WHEEL = new BlockType(0x13,"Wheel","o", new BlockType[] {

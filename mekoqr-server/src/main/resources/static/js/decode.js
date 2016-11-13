@@ -41,7 +41,7 @@ function uploadFile(url,file,$infoDiv, $tableDiv){
       var $pre = $("<pre></pre>")
         .addClass("pre-scrollable")
         .text(JSON.stringify(level, null, 2));
-      $("#json").append($pre);
+      $("#json").empty().append($pre);
     } else {
       var $err = $("<pre></pre>")
         .addClass("alert alert-danger")
@@ -80,6 +80,7 @@ function displayLevel(level, $infoDiv, $tableDiv) {
   $infoDiv.empty().append($title,$author,$compressedDiv,$uncompressedDiv);
 
   var $tbody = $tableDiv.find("tbody");
+  $tbody.empty();
   level.data.sort(function(a,b) {
     // Sort by y, then z then x
     if(a.y != b.y) {

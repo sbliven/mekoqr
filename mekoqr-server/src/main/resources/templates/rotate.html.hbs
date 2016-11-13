@@ -69,6 +69,12 @@
   <script src="{{webroot}}/js/rotate.js"></script>
   <script>
   var qrimage = null;
+  function update() {
+    var rotation = parseInt( $("#rotationbtns .active").text() );
+    console.log("rotation=",rotation);
+    uploadFile("{{webroot}}/rotate.png?rotation="+rotation/90,qrimage, $("#outputQR"));
+  }
+
   $("#fileinput").change(function() {
     if(!this.files || this.files.length < 1) {
       qrimage = null;
@@ -88,8 +94,12 @@
     } finally {
       $("#results").show();
     }
-    var rotation = parseInt( $("#rotationbtns .active").text() );
-    uploadFile("{{webroot}}/rotate.png?rotation="+rotation/90,this.files[0], $("#outputQR"));
+    update();
+  });
+  $("#rotationbtns").change(function() {
+    if(qrimage) {
+      update();
+    }
   });
   </script>
 </body>

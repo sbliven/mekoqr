@@ -121,7 +121,7 @@ public class Rotate {
 		Map<BlockType, BlockType> subMap;
 		BlockType parent;
 		
-		parent = STAIR;
+		parent = STONE_STAIR;
 		subMap = new HashMap<BlockType, BlockType>();
 		subMap.put(parent.getSubtype( (byte) 0x00 ), parent.getSubtype( (byte) 0x03 ));
 		subMap.put(parent.getSubtype( (byte) 0x03 ), parent.getSubtype( (byte) 0x02 ));
@@ -137,7 +137,7 @@ public class Rotate {
 		subMap.put(parent.getSubtype( (byte) 0x11 ), parent.getSubtype( (byte) 0x10 ));
 		parentMap.put(parent, subMap);
 
-		parent = WEDGE;
+		parent = STONE_WEDGE;
 		subMap = new HashMap<BlockType, BlockType>();
 		subMap.put(parent.getSubtype( (byte) 0x00 ), parent.getSubtype( (byte) 0x03 ));
 		subMap.put(parent.getSubtype( (byte) 0x03 ), parent.getSubtype( (byte) 0x02 ));
@@ -160,7 +160,7 @@ public class Rotate {
 		subMap.put(parent.getSubtype( (byte) 0x14 ), parent.getSubtype( (byte) 0x14 ));
 		parentMap.put(parent, subMap);
 
-		parent = PILLAR;
+		parent = STONE_PILLAR;
 		subMap = new HashMap<BlockType, BlockType>();
 		subMap.put(parent.getSubtype( (byte) 0x00 ), parent.getSubtype( (byte) 0x00 ));
 		subMap.put(parent.getSubtype( (byte) 0x0C ), parent.getSubtype( (byte) 0x14 ));

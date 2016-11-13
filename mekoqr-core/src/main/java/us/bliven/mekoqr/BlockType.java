@@ -38,50 +38,129 @@ import java.util.Map;
  *
  */
 public class BlockType {
-	public static final BlockType AIR = new BlockType(0,"Air"," ");
-	public static final BlockType STONE = new BlockType(1,"Stone","S");
-	public static final BlockType BRICK = new BlockType(2,"Brick","K");
-	public static final BlockType WIN = new BlockType(4,"Win","!");
-	public static final BlockType STAIR = new BlockType(5,"Stair","/", new BlockType[] {
-			new BlockType( 0x00,"Stair(00)","/"),
-			new BlockType( 0x01,"Stair(01)","/"),
-			new BlockType( 0x02,"Stair(02)","/"),
-			new BlockType( 0x03,"Stair(03)","/"),
-			new BlockType( 0x04,"Stair(04)","/"),
-			new BlockType( 0x05,"Stair(05)","/"),
-			new BlockType( 0x06,"Stair(06)","/"),
-			new BlockType( 0x07,"Stair(07)","/"),
-			new BlockType( 0x10,"Stair(10)","/"),
-			new BlockType( 0x11,"Stair(11)","/"),
-			new BlockType( 0x12,"Stair(12)","/"),
-			new BlockType( 0x13,"Stair(13)","/"),
+	public static final BlockType AIR = new BlockType(0x00,"Air"," ");
+	public static final BlockType STONE = new BlockType(0x01,"Stone","#");
+	public static final BlockType BRICK = new BlockType(0x02,"BrickRed","X");
+	public static final BlockType STONE_03 = new BlockType(0x03,"Stone03","#",new BlockType[0],false);
+	public static final BlockType WIN = new BlockType(0x04,"Win","W");
+	public static final BlockType STONE_STAIR = new BlockType(0x05,"StoneStair","s", new BlockType[] {
+			new BlockType( 0x00,"StoneStair(00)","s"),
+			new BlockType( 0x01,"StoneStair(01)","s"),
+			new BlockType( 0x02,"StoneStair(02)","s"),
+			new BlockType( 0x03,"StoneStair(03)","s"),
+			new BlockType( 0x04,"StoneStair(04)","s"),
+			new BlockType( 0x05,"StoneStair(05)","s"),
+			new BlockType( 0x06,"StoneStair(06)","s"),
+			new BlockType( 0x07,"StoneStair(07)","s"),
+			new BlockType( 0x10,"StoneStair(10)","s"),
+			new BlockType( 0x11,"StoneStair(11)","s"),
+			new BlockType( 0x12,"StoneStair(12)","s"),
+			new BlockType( 0x13,"StoneStair(13)","s"),
 	});
-	public static final BlockType WEDGE = new BlockType(7,"Wedge","W", new BlockType[] {
-			new BlockType( 0x00,"Wedge(00)","W"),
-			new BlockType( 0x01,"Wedge(01)","W"),
-			new BlockType( 0x02,"Wedge(02)","W"),
-			new BlockType( 0x03,"Wedge(03)","W"),
-			new BlockType( 0x04,"Wedge(04)","W"),
-			new BlockType( 0x05,"Wedge(05)","W"),
-			new BlockType( 0x06,"Wedge(06)","W"),
-			new BlockType( 0x07,"Wedge(07)","W"),
-			new BlockType( 0x10,"Wedge(10)","W"),
-			new BlockType( 0x11,"Wedge(11)","W"),
-			new BlockType( 0x12,"Wedge(12)","W"),
-			new BlockType( 0x13,"Wedge(13)","W"),
+	public static final BlockType TRASH = new BlockType(0x06,"Trash","t",new BlockType[0],false);
+	public static final BlockType STONE_WEDGE = new BlockType(0x07,"StoneWedge","/", new BlockType[] {
+			new BlockType( 0x00,"StoneWedge(00)","/"),
+			new BlockType( 0x01,"StoneWedge(01)","/"),
+			new BlockType( 0x02,"StoneWedge(02)","/"),
+			new BlockType( 0x03,"StoneWedge(03)","/"),
+			new BlockType( 0x04,"StoneWedge(04)","/"),
+			new BlockType( 0x05,"StoneWedge(05)","/"),
+			new BlockType( 0x06,"StoneWedge(06)","/"),
+			new BlockType( 0x07,"StoneWedge(07)","/"),
+			new BlockType( 0x10,"StoneWedge(10)","/"),
+			new BlockType( 0x11,"StoneWedge(11)","/"),
+			new BlockType( 0x12,"StoneWedge(12)","/"),
+			new BlockType( 0x13,"StoneWedge(13)","/"),
 	});
-	public static final BlockType WATER = new BlockType(11,"Water","~");
-	public static final BlockType GRASS = new BlockType(12,"Grass","G");
-	public static final BlockType B_BOT = new BlockType(15,"B-bot","B", new BlockType[] {
+	// Actually more like desert?
+	public static final BlockType GRASS_WEDGE = new BlockType(0x08,"GrassWedge","/", new BlockType[] {
+			new BlockType( 0x00,"GrassWedge(00)","/"),
+			new BlockType( 0x01,"GrassWedge(01)","/"),
+			new BlockType( 0x02,"GrassWedge(02)","/"),
+			new BlockType( 0x03,"GrassWedge(03)","/"),
+			new BlockType( 0x04,"GrassWedge(04)","/"),
+			new BlockType( 0x05,"GrassWedge(05)","/"),
+			new BlockType( 0x06,"GrassWedge(06)","/"),
+			new BlockType( 0x07,"GrassWedge(07)","/"),
+			new BlockType( 0x10,"GrassWedge(10)","/"),
+			new BlockType( 0x11,"GrassWedge(11)","/"),
+			new BlockType( 0x12,"GrassWedge(12)","/"),
+			new BlockType( 0x13,"GrassWedge(13)","/"),
+	},false);
+	public static final BlockType GOLDEN_BALL = new BlockType(0x09,"GoldenBall","*",new BlockType[0],false);
+	// Win without star. Checkpoint?
+	public static final BlockType METAL_WIN = new BlockType(0x0a,"MetalWin","W", new BlockType[] {
+			new BlockType( 0x00,"MetalWin(S)","W"),
+			new BlockType( 0x01,"MetalWin(E)","W"),
+			new BlockType( 0x02,"MetalWin(N)","W"),
+			new BlockType( 0x03,"MetalWin(W)","W"),
+			new BlockType( 0x04,"MetalWin(D)","W"),
+			new BlockType( 0x0c,"MetalWin(U)","W"),
+	},false);
+	public static final BlockType WATER = new BlockType(0x0b,"Water","~");
+	public static final BlockType GRASS = new BlockType(0x0c,"Grass","#");
+	// Not a good name. A black, free-moving cylinder
+	public static final BlockType BLACK_PILLAR = new BlockType(0x0d,"BlackPillar","X",new BlockType[0],false);
+	public static final BlockType STONE_QUARTER = new BlockType(0x0e,"StoneQuarterPillar","#", new BlockType[] {
+			new BlockType( 0x00,"StoneQuarterPillar(00)","#"),
+			new BlockType( 0x01,"StoneQuarterPillar(01)","#"),
+			new BlockType( 0x02,"StoneQuarterPillar(02)","#"),
+			new BlockType( 0x03,"StoneQuarterPillar(03)","#"),
+			new BlockType( 0x04,"StoneQuarterPillar(04)","#"),
+			new BlockType( 0x05,"StoneQuarterPillar(05)","#"),
+			new BlockType( 0x06,"StoneQuarterPillar(06)","#"),
+			new BlockType( 0x07,"StoneQuarterPillar(07)","#"),
+			new BlockType( 0x10,"StoneQuarterPillar(10)","#"),
+			new BlockType( 0x11,"StoneQuarterPillar(11)","#"),
+			new BlockType( 0x12,"StoneQuarterPillar(12)","#"),
+			new BlockType( 0x13,"StoneQuarterPillar(13)","#"),
+	},false);
+	public static final BlockType B_BOT = new BlockType(0x0f,"B-bot","B", new BlockType[] {
 			new BlockType( 0x00,"B-bot(S)","B"),
 			new BlockType( 0x01,"B-bot(E)","B"),
 			new BlockType( 0x02,"B-bot(N)","B"),
 			new BlockType( 0x03,"B-bot(W)","B"),
 	});
-	public static final BlockType ZAPPER = new BlockType(16,"Zapper","Z");
-	public static final BlockType DRAGGABLE = new BlockType(17,"Draggable","D");
-	public static final BlockType DESERT = new BlockType(18,"Desert","g");
-	public static final BlockType MOTOR = new BlockType(22,"Motor","@", new BlockType[] {
+	public static final BlockType ZAPPER = new BlockType(0x10,"Zapper","Z");
+	public static final BlockType DRAGGABLE = new BlockType(0x11,"Draggable","d");
+	public static final BlockType DESERT = new BlockType(0x12,"Desert","#");
+	public static final BlockType WHEEL = new BlockType(0x13,"Wheel","o", new BlockType[] {
+			new BlockType( 0x00,"Wheel(S)","o"),
+			new BlockType( 0x01,"Wheel(E)","o"),
+			new BlockType( 0x02,"Wheel(N)","o"),
+			new BlockType( 0x03,"Wheel(W)","o"),
+			new BlockType( 0x04,"Wheel(D)","o"),
+			new BlockType( 0x0c,"Wheel(U)","o"),
+	}, false);
+	public static final BlockType METAL_STAIR = new BlockType(0x14,"MetalStair","/", new BlockType[] {
+			new BlockType( 0x00,"MetalStair(00)","/"),
+			new BlockType( 0x01,"MetalStair(01)","/"),
+			new BlockType( 0x02,"MetalStair(02)","/"),
+			new BlockType( 0x03,"MetalStair(03)","/"),
+			new BlockType( 0x04,"MetalStair(04)","/"),
+			new BlockType( 0x05,"MetalStair(05)","/"),
+			new BlockType( 0x06,"MetalStair(06)","/"),
+			new BlockType( 0x07,"MetalStair(07)","/"),
+			new BlockType( 0x10,"MetalStair(10)","/"),
+			new BlockType( 0x11,"MetalStair(11)","/"),
+			new BlockType( 0x12,"MetalStair(12)","/"),
+			new BlockType( 0x13,"MetalStair(13)","/"),
+	},false);
+	public static final BlockType METAL_QUARTER = new BlockType(0x15,"MetalQuarterPillar","+", new BlockType[] {
+			new BlockType( 0x00,"MetalQuarterPillar(00)","+"),
+			new BlockType( 0x01,"MetalQuarterPillar(01)","+"),
+			new BlockType( 0x02,"MetalQuarterPillar(02)","+"),
+			new BlockType( 0x03,"MetalQuarterPillar(03)","+"),
+			new BlockType( 0x04,"MetalQuarterPillar(04)","+"),
+			new BlockType( 0x05,"MetalQuarterPillar(05)","+"),
+			new BlockType( 0x06,"MetalQuarterPillar(06)","+"),
+			new BlockType( 0x07,"MetalQuarterPillar(07)","+"),
+			new BlockType( 0x10,"MetalQuarterPillar(10)","+"),
+			new BlockType( 0x11,"MetalQuarterPillar(11)","+"),
+			new BlockType( 0x12,"MetalQuarterPillar(12)","+"),
+			new BlockType( 0x13,"MetalQuarterPillar(13)","+"),
+	},false);
+	public static final BlockType MOTOR = new BlockType(0x16,"Motor","m", new BlockType[] {
 			new BlockType( 0x00,"Motor(S)","@"),
 			new BlockType( 0x01,"Motor(E)","@"),
 			new BlockType( 0x02,"Motor(N)","@"),
@@ -89,61 +168,100 @@ public class BlockType {
 			new BlockType( 0x04,"Motor(D)","@"),
 			new BlockType( 0x0c,"Motor(U)","@"),
 	});
-	public static final BlockType METAL = new BlockType(25,"Metal","M");
-	public static final BlockType R_BOT = new BlockType(26,"R-bot","R", new BlockType[] {
+	// Slightly different metal texture
+	public static final BlockType METAL_17 = new BlockType(0x17,"Metal17","+", new BlockType[0], false);
+	public static final BlockType STONE_18 = new BlockType(0x18,"Stone18","#", new BlockType[0], false);
+	public static final BlockType METAL = new BlockType(0x19,"Metal","+");
+	public static final BlockType R_BOT = new BlockType(0x1a,"R-bot","R", new BlockType[] {
 			new BlockType( 0x00,"R-bot(S)","R"),
 			new BlockType( 0x01,"R-bot(E)","R"),
 			new BlockType( 0x02,"R-bot(N)","R"),
 			new BlockType( 0x03,"R-bot(W)","R"),
 	});
-	public static final BlockType EYE = new BlockType(27,"Eye",":");
-	public static final BlockType CURVED_RAIL = new BlockType(30,"CurvedRail","-", new BlockType[] {
-			new BlockType( 0x00,"CurvedRail(00)","-"),
-			new BlockType( 0x01,"CurvedRail(01)","-"),
-			new BlockType( 0x02,"CurvedRail(02)","-"),
-			new BlockType( 0x03,"CurvedRail(03)","-"),
-			new BlockType( 0x04,"CurvedRail(04)","-"),
-			new BlockType( 0x05,"CurvedRail(05)","-"),
-			new BlockType( 0x06,"CurvedRail(06)","-"),
-			new BlockType( 0x07,"CurvedRail(07)","-"),
-			new BlockType( 0x10,"CurvedRail(10)","-"),
-			new BlockType( 0x11,"CurvedRail(11)","-"),
-			new BlockType( 0x12,"CurvedRail(12)","-"),
-			new BlockType( 0x13,"CurvedRail(13)","-"),
+	public static final BlockType EYE = new BlockType(0x1b,"Eye","0");
+	// Function is not understood. Possibly buggy.
+	public static final BlockType BUGGY_1C = new BlockType(0x1c,"Unknown1C","?", new BlockType[0], false);
+	public static final BlockType STONE_1D = new BlockType(0x1d,"Stone1D","#", new BlockType[0], false);
+	public static final BlockType CURVED_RAIL = new BlockType(0x1e,"CurvedRail","j", new BlockType[] {
+			new BlockType( 0x00,"CurvedRail(00)","j"),
+			new BlockType( 0x01,"CurvedRail(01)","j"),
+			new BlockType( 0x02,"CurvedRail(02)","j"),
+			new BlockType( 0x03,"CurvedRail(03)","j"),
+			new BlockType( 0x04,"CurvedRail(04)","j"),
+			new BlockType( 0x05,"CurvedRail(05)","j"),
+			new BlockType( 0x06,"CurvedRail(06)","j"),
+			new BlockType( 0x07,"CurvedRail(07)","j"),
+			new BlockType( 0x10,"CurvedRail(10)","j"),
+			new BlockType( 0x11,"CurvedRail(11)","j"),
+			new BlockType( 0x12,"CurvedRail(12)","j"),
+			new BlockType( 0x13,"CurvedRail(13)","j"),
 	});
-	public static final BlockType HALF = new BlockType(32,"HalfPillar","H", new BlockType[] {
-			new BlockType( 0x00,"HalfPillar(00)","H"),
-			new BlockType( 0x01,"HalfPillar(01)","H"),
-			new BlockType( 0x02,"HalfPillar(02)","H"),
-			new BlockType( 0x03,"HalfPillar(03)","H"),
-			new BlockType( 0x04,"HalfPillar(04)","H"),
-			new BlockType( 0x14,"HalfPillar(14)","H"),
-			new BlockType( 0x15,"HalfPillar(15)","H"),
-			new BlockType( 0x16,"HalfPillar(16)","H"),
-			new BlockType( 0x17,"HalfPillar(17)","H"),
-			new BlockType( 0x0c,"HalfPillar(0c)","H"),
-			new BlockType( 0x05,"HalfPillar(05)","H"),
-			new BlockType( 0x06,"HalfPillar(06)","H"),
-			new BlockType( 0x0f,"HalfPillar(0f)","H"),
+	public static final BlockType STONE_PILLAR_1F = new BlockType(0x1f,"StonePillar1F","#", new BlockType[] {
+			new BlockType(0x14,"StonePillar1F(X)","#"),
+			new BlockType(0x00,"StonePillar1F(Y)","#"),
+			new BlockType(0x0c,"StonePillar1F(Z)","#"),
+	},false);
+	public static final BlockType METAL_HALF = new BlockType(0x20,"MetalHalfPillar","+", new BlockType[] {
+			new BlockType( 0x00,"MetalHalfPillar(00)","+"),
+			new BlockType( 0x01,"MetalHalfPillar(01)","+"),
+			new BlockType( 0x02,"MetalHalfPillar(02)","+"),
+			new BlockType( 0x03,"MetalHalfPillar(03)","+"),
+			new BlockType( 0x04,"MetalHalfPillar(04)","+"),
+			new BlockType( 0x14,"MetalHalfPillar(14)","+"),
+			new BlockType( 0x15,"MetalHalfPillar(15)","+"),
+			new BlockType( 0x16,"MetalHalfPillar(16)","+"),
+			new BlockType( 0x17,"MetalHalfPillar(17)","+"),
+			new BlockType( 0x0c,"MetalHalfPillar(0c)","+"),
+			new BlockType( 0x05,"MetalHalfPillar(05)","+"),
+			new BlockType( 0x06,"MetalHalfPillar(06)","+"),
+			new BlockType( 0x0f,"MetalHalfPillar(0f)","+"),
 	});
-	public static final BlockType RAIL = new BlockType(33,"Rail","-", new BlockType[] {
-			new BlockType( 0x00,"Rail(X)","-"),
-			new BlockType( 0x03,"Rail(Z)","-"),
-			new BlockType( 0x14,"Rail(Y)","-"),
+	public static final BlockType RAIL = new BlockType(0x21,"Rail","|", new BlockType[] {
+			new BlockType( 0x00,"Rail(X)","|"),
+			new BlockType( 0x03,"Rail(Z)","|"),
+			new BlockType( 0x14,"Rail(Y)","|"),
 	});
+	public static final BlockType STONE_HALF = new BlockType(0x22,"StoneHalfPillar","#", new BlockType[] {
+			new BlockType( 0x00,"StoneHalfPillar(00)","#"),
+			new BlockType( 0x01,"StoneHalfPillar(01)","#"),
+			new BlockType( 0x02,"StoneHalfPillar(02)","#"),
+			new BlockType( 0x03,"StoneHalfPillar(03)","#"),
+			new BlockType( 0x04,"StoneHalfPillar(04)","#"),
+			new BlockType( 0x14,"StoneHalfPillar(14)","#"),
+			new BlockType( 0x15,"StoneHalfPillar(15)","#"),
+			new BlockType( 0x16,"StoneHalfPillar(16)","#"),
+			new BlockType( 0x17,"StoneHalfPillar(17)","#"),
+			new BlockType( 0x0c,"StoneHalfPillar(0c)","#"),
+			new BlockType( 0x05,"StoneHalfPillar(05)","#"),
+			new BlockType( 0x06,"StoneHalfPillar(06)","#"),
+			new BlockType( 0x0f,"StoneHalfPillar(0f)","#"),
+	},false);
 
-	public static final BlockType PILLAR = new BlockType(35,"Pillar","P", new BlockType[] {
-			new BlockType(0x14,"Pillar(X)","P"),
-			new BlockType(0x00,"Pillar(Y)","P"),
-			new BlockType(0x0c,"Pillar(Z)","P"),
+	public static final BlockType STONE_PILLAR = new BlockType(0x23,"StonePillar","P", new BlockType[] {
+			new BlockType(0x14,"StonePillar(X)","P"),
+			new BlockType(0x00,"StonePillar(Y)","P"),
+			new BlockType(0x0c,"StonePillar(Z)","P"),
 	});
-	public static final BlockType BALL = new BlockType(37,"Ball","O");
-	public static final BlockType SLIDER = new BlockType(41,"Slider","L", new BlockType[] {
+	public static final BlockType DRAGGABLE_PILLAR = new BlockType(0x24,"DraggablePillar","d", new BlockType[] {
+			new BlockType(0x14,"DraggablePillar(X)","d"),
+			new BlockType(0x00,"DraggablePillar(Y)","d"),
+			new BlockType(0x0c,"DraggablePillar(Z)","d"),
+	},false);
+	public static final BlockType BALL = new BlockType(0x25,"Ball","O");
+	public static final BlockType STONE_26 = new BlockType(0x26,"Stone26","#", new BlockType[0], false);
+	public static final BlockType METAL_PILLAR = new BlockType(0x27,"MetalPillar","P", new BlockType[] {
+			new BlockType(0x14,"MetalPillar(X)","P"),
+			new BlockType(0x00,"MetalPillar(Y)","P"),
+			new BlockType(0x0c,"MetalPillar(Z)","P"),
+	});
+	public static final BlockType UNKNOWN_28 = new BlockType(0x28,"Unknown28","?", new BlockType[0], false);
+	public static final BlockType SLIDER = new BlockType(0x29,"Slider","L", new BlockType[] {
 			new BlockType(0x00,"Slider(X)","L"),
 			new BlockType(0x03,"Slider(Z)","L"),
 			new BlockType(0x14,"Slider(Y)","L"),
 	});
-	public static final BlockType FENCE = new BlockType(43,"Fence","F", new BlockType[] {
+	public static final BlockType UNKNOWN_2A = new BlockType(0x2a,"Unknown2A","?", new BlockType[0], false);
+	public static final BlockType FENCE = new BlockType(0x2b,"Fence","F", new BlockType[] {
 			new BlockType( 0x00,"Fence(00)","F"),
 			new BlockType( 0x03,"Fence(03)","F"),
 			new BlockType( 0x04,"Fence(04)","F"),
@@ -151,6 +269,12 @@ public class BlockType {
 			new BlockType( 0x10,"Fence(10)","F"),
 			new BlockType( 0x13,"Fence(13)","F"),
 	});
+	public static final BlockType UNKNOWN_2C = new BlockType(0x2C,"Unknown2C","?", new BlockType[0], false);
+	public static final BlockType UNKNOWN_2D = new BlockType(0x2D,"Unknown2D","?", new BlockType[0], false);
+	public static final BlockType UNKNOWN_2E = new BlockType(0x2E,"Unknown2E","?", new BlockType[0], false);
+	public static final BlockType UNKNOWN_2F = new BlockType(0x2F,"Unknown2F","?", new BlockType[0], false);
+	// Might crash app?
+	public static final BlockType UNKNOWN_30 = new BlockType(0x30,"Unknown30","?", new BlockType[0], false);
 
 
 	private static final Map<Byte,BlockType> knownTypes = new HashMap<>();
@@ -159,26 +283,52 @@ public class BlockType {
 				AIR,
 				STONE,
 				BRICK,
+				STONE_03,
 				WIN,
-				STAIR,
-				WEDGE,
+				STONE_STAIR,
+				TRASH,
+				STONE_WEDGE,
+				GRASS_WEDGE,
+				GOLDEN_BALL,
+				METAL_WIN,
 				WATER,
 				GRASS,
+				BLACK_PILLAR,
+				STONE_QUARTER,
 				B_BOT,
 				ZAPPER,
 				DRAGGABLE,
 				DESERT,
+				WHEEL,
+				METAL_STAIR,
+				METAL_QUARTER,
 				MOTOR,
+				METAL_17,
+				STONE_18,
 				METAL,
 				R_BOT,
 				EYE,
+				BUGGY_1C,
+				STONE_1D,
 				CURVED_RAIL,
-				HALF,
+				STONE_PILLAR_1F,
+				METAL_HALF,
 				RAIL,
-				PILLAR,
-				SLIDER,
+				STONE_HALF,
+				STONE_PILLAR,
+				DRAGGABLE_PILLAR,
 				BALL,
-				FENCE
+				STONE_26,
+				METAL_PILLAR,
+				UNKNOWN_28,
+				SLIDER,
+				UNKNOWN_2A,
+				FENCE,
+				UNKNOWN_2C,
+				UNKNOWN_2D,
+				UNKNOWN_2E,
+				UNKNOWN_2F,
+				UNKNOWN_30
 			).stream()
 			.forEach((blk) -> knownTypes.put(blk.getValue(),blk) );
 	}
@@ -188,6 +338,7 @@ public class BlockType {
 	private final String name;
 	private final String shortName;//1 char name
 	private final BlockType[] subtypes;
+	private final boolean standard;
 	
 	private BlockType(int value, String name, String shortName) {
 		this((byte)value,name,shortName);
@@ -199,6 +350,12 @@ public class BlockType {
 		this(value,name,shortName,new BlockType[0]);
 	}
 	private BlockType(byte value, String name, String shortName,BlockType[] subtypes) {
+		this(value, name, shortName, subtypes, true);
+	}
+	private BlockType(int value, String name, String shortName,BlockType[] subtypes,boolean standard) {
+		this((byte)value, name, shortName, subtypes, standard);
+	}
+	private BlockType(byte value, String name, String shortName,BlockType[] subtypes,boolean standard) {
 		this.value = value;
 		this.name = name;
 		if(shortName.length() > 1) {
@@ -212,13 +369,14 @@ public class BlockType {
 				sub.parent = this;
 			}
 		}
+		this.standard = standard;
 	}
 
 	public static BlockType fromByte(byte b) {
 		if(knownTypes.containsKey(b)) {
 			return knownTypes.get(b);
 		} else {
-			BlockType t = new BlockType(b, String.format("Blk%d",b),"?");
+			BlockType t = new BlockType(b, String.format("Blk%02x",b),"?");
 			knownTypes.put(b,t);
 			return t;
 		}
@@ -265,12 +423,18 @@ public class BlockType {
 	
 	@Override
 	public String toString() {
-		return name;
+		if(standard)
+			return name;
+		else
+			return name+"*";
 	}
 	public static boolean isSolid(BlockType blk) {
 		return blk != BlockType.AIR &&
 				blk != BlockType.WATER &&
 				blk != BlockType.B_BOT &&
 				blk != BlockType.R_BOT;
+	}
+	public boolean isStandard() {
+		return standard;
 	}
 }
